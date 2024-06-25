@@ -1,12 +1,13 @@
 // frontend/src/App.js
 import React, { useState } from "react";
 import axios from "axios";
-import "./App.css"; // Optionally add styling here
+import "./App.css";
 
 function App() {
   const [url, setUrl] = useState("");
   const [report, setReport] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,11 +15,14 @@ function App() {
     setReport(null);
 
     try {
+      setLoading(true);
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/crawl`,
         { url }
       );
       setReport(response.data.report);
+      console.log(response.data.report);
+      setLoading(false);
     } catch (error) {
       setError(error.response ? error.response.data.error : error.message);
     }
@@ -37,6 +41,7 @@ function App() {
         <button type="submit">Crawl</button>
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
+      {loading && <p>Crawling page...</p>}
       {report && (
         <div>
           <h2>Report for {url}</h2>
@@ -47,6 +52,7 @@ function App() {
                   {item.url}
                 </a>{" "}
                 - {item.hits} times
+                <OGPreview ogData={item.ogData} />
               </li>
             ))}
           </ul>
@@ -55,5 +61,20 @@ function App() {
     </div>
   );
 }
+
+const OGPreview = ({ ogData }) => {
+  if (!ogData) {
+    return <p>No Open Graph metadata found.</p>;
+  }
+
+  return (
+    <div className="og-preview">
+      {ogData.title && <h3>{ogData.title}</h3>}
+      {ogData.image && <img src={ogData.image} alt="OG preview" />}
+      {ogData.description && <p>{ogData.description}</p>}
+      {/* Add more OG properties as needed */}
+    </div>
+  );
+};
 
 export default App;
