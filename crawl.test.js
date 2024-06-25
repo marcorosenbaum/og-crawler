@@ -2,9 +2,9 @@ const { normalizeURL, getURLsFromHTML } = require("./crawl");
 const { expect, test } = require("@jest/globals");
 
 test("normalizeURL", () => {
-  const input = "HTTP://www.Example.com/path";
+  const input = "HTTPS://coding-Bootcamps.eu/";
   const actual = normalizeURL(input);
-  const expected = "http://example.com/path";
+  const expected = "https://coding-bootcamps.eu";
   expect(actual).toEqual(expected);
 });
 

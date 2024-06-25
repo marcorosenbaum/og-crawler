@@ -1,6 +1,25 @@
 const normalizeUrl = require("@esm2cjs/normalize-url").default;
 const { JSDOM } = require("jsdom");
 
+const crawlPage = async (currentURL) => {
+  console.log(`actively crawling ${currentURL}`);
+  try {
+    const response = await fetch(currentURL);
+    if (response.status > 399) {
+      console.log(`Error fetching ${currentURL}: ${response.status}`);
+      return;
+    }
+    const contentType = response.headers.get("content-type");
+    if (!contentType.includes("text/html")) {
+      console.log(`None html respone for ${currentURL}`);
+    }
+
+    console.log(await response.text());
+  } catch (error) {
+    console.log(`Error fetching ${currentURL}: ${error.message}`);
+  }
+};
+
 const normalizeURL = (url) => {
   const normalizedUrl = normalizeUrl(url);
   return normalizedUrl;
@@ -32,4 +51,4 @@ const getURLsFromHTML = (htmlBody, baseURL) => {
   return urls;
 };
 
-module.exports = { normalizeURL, getURLsFromHTML };
+module.exports = { normalizeURL, getURLsFromHTML, crawlPage };
