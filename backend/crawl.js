@@ -1,7 +1,13 @@
 // backend/crawl.js
 const normalizeUrl = require("@esm2cjs/normalize-url").default;
 const { JSDOM } = require("jsdom");
-const fetch = require("node-fetch"); // Ensure node-fetch is installed
+// const fetch = require("node-fetch");
+// Ensure node-fetch is installed
+
+let fetch;
+import("node-fetch").then((module) => {
+  fetch = module.default; // Ensure to use .default with ES modules
+});
 
 const crawlPage = async (baseURL, currentURL, pages) => {
   const baseURLObj = new URL(baseURL);
