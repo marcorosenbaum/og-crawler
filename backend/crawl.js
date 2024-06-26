@@ -1,12 +1,9 @@
-// backend/crawl.js
 const normalizeUrl = require("@esm2cjs/normalize-url").default;
 const { JSDOM } = require("jsdom");
-// const fetch = require("node-fetch");
-// Ensure node-fetch is installed
 
 let fetch;
 import("node-fetch").then((module) => {
-  fetch = module.default; // Ensure to use .default with ES modules
+  fetch = module.default;
 });
 
 const crawlPage = async (baseURL, currentURL, pages) => {
@@ -81,8 +78,6 @@ const extractOGData = (html) => {
   const metaTags = dom.window.document.querySelectorAll("meta");
   const ogData = {};
 
-  console.log(`- - - - META TAGS: ${metaTags}`);
-
   metaTags.forEach((tag) => {
     if (
       tag.getAttribute("property") &&
@@ -94,7 +89,7 @@ const extractOGData = (html) => {
   });
 
   if (Object.keys(ogData).length === 0) {
-    return null; // Return null if no OG metadata found
+    return null;
   }
 
   return ogData;

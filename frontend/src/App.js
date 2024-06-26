@@ -30,7 +30,8 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Web Crawler</h1>
+      <h1>OG Crawler</h1>
+      <p>Enter a URL to crawl and get Open Graph metadata.</p>
       <form onSubmit={handleSubmit}>
         <input
           type="text"

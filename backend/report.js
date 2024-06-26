@@ -1,4 +1,3 @@
-// backend/report.js
 function generateReport(pages) {
   const sortedPages = sortPages(pages);
   return sortedPages.map(([url, data]) => ({

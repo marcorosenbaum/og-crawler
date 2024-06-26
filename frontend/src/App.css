@@ -1,4 +1,7 @@
-/* frontend/src/App.css */
+body {
+  background-color: #acacac;
+}
+
 .App {
   text-align: center;
 }
