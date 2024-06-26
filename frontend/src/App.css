@@ -1,0 +1,42 @@
+body {
+  background-color: #acacac;
+}
+
+.App {
+  text-align: center;
+}
+
+form {
+  margin: 20px 0;
+}
+
+input {
+  padding: 8px;
+  margin-right: 8px;
+}
+
+button {
+  padding: 8px;
+}
+
+.og-preview {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-top: 10px;
+  display: flex;
+}
+
+.og-preview div {
+  margin: 0 auto;
+}
+
+.og-preview img {
+  max-width: 100px;
+  max-height: 100px;
+  display: block;
+}
+
+li {
+  list-style-type: none;
+  margin: 3rem 0;
+}
