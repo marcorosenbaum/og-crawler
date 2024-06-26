@@ -7,7 +7,9 @@ const { generateReport } = require("./report");
 const app = express();
 const port = process.env.PORT || 3001;
 
+// use cors to enable communication between frontend and backend
 app.use(cors());
+// use bodyParser to access req.body
 app.use(bodyParser.json());
 
 app.post("/crawl", async (req, res) => {

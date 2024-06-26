@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./App.css";
 
+import OGPreview from "./components/OGPreview";
+
 function App() {
   const [url, setUrl] = useState("");
   const [report, setReport] = useState(null);
@@ -16,12 +18,12 @@ function App() {
 
     try {
       setLoading(true);
+      // use axios to send a POST request to the backend
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/crawl`,
         { url }
       );
       setReport(response.data.report);
-      console.log(response.data.report);
       setLoading(false);
     } catch (error) {
       setError(error.response ? error.response.data.error : error.message);
@@ -52,7 +54,7 @@ function App() {
                 <a href={item.url} target="_blank" rel="noopener noreferrer">
                   {item.url}
                 </a>{" "}
-                - {item.hits} links found on URL
+                - Link was {item.hits} times found on the page.
                 <OGPreview ogData={item.ogData} />
               </li>
             ))}
@@ -62,21 +64,5 @@ function App() {
     </div>
   );
 }
-
-const OGPreview = ({ ogData }) => {
-  if (!ogData) {
-    return <p>No Open Graph metadata found.</p>;
-  }
-
-  return (
-    <div className="og-preview">
-      {ogData.image && <img src={ogData.image} alt="OG preview" />}
-      <div>
-        {ogData.title && <h3>{ogData.title}</h3>}
-        {ogData.description && <p>{ogData.description}</p>}
-      </div>
-    </div>
-  );
-};
 
 export default App;

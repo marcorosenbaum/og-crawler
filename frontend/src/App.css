@@ -6,6 +6,12 @@ body {
   text-align: center;
 }
 
+ul {
+  max-width: 80%;
+  padding: 0 3rem;
+  margin: 0 auto;
+}
+
 form {
   margin: 20px 0;
 }
@@ -13,6 +19,7 @@ form {
 input {
   padding: 8px;
   margin-right: 8px;
+  width: 300px;
 }
 
 button {
@@ -24,6 +31,7 @@ button {
   padding: 10px;
   margin-top: 10px;
   display: flex;
+  background-color: #e0e0e0;
 }
 
 .og-preview div {
@@ -31,8 +39,8 @@ button {
 }
 
 .og-preview img {
-  max-width: 100px;
-  max-height: 100px;
+  max-width: 200px;
+  max-height: 200px;
   display: block;
 }
 

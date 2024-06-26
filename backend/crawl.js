@@ -6,6 +6,7 @@ import("node-fetch").then((module) => {
   fetch = module.default;
 });
 
+// FN crawls the given URL and returns a pages object with the count of each page and its OG data
 const crawlPage = async (baseURL, currentURL, pages) => {
   const baseURLObj = new URL(baseURL);
   const currentURLObj = new URL(currentURL);
@@ -13,6 +14,7 @@ const crawlPage = async (baseURL, currentURL, pages) => {
     return pages;
   }
 
+  // Normalize the URL to avoid duplicates
   const normalizedCurrentURL = normalizeURL(currentURL);
   if (pages[normalizedCurrentURL]) {
     pages[normalizedCurrentURL].count++;
@@ -35,10 +37,13 @@ const crawlPage = async (baseURL, currentURL, pages) => {
       return pages;
     }
 
+    // Get HTML body of url in response
     const htmlBody = await response.text();
 
+    // Extract OG data from HTML body and add to pages object
     pages[normalizedCurrentURL].ogData = extractOGData(htmlBody);
 
+    // Get URLs from HTML body and crawl each of them
     const nextURLs = getURLsFromHTML(htmlBody, baseURL);
     for (const nextURL of nextURLs) {
       pages = await crawlPage(baseURL, nextURL, pages);
@@ -54,6 +59,7 @@ const normalizeURL = (url) => {
   return normalizeUrl(url, { stripWWW: false });
 };
 
+// FN to extract URLs from HTML body
 const getURLsFromHTML = (htmlBody, baseURL) => {
   const urls = [];
   const dom = new JSDOM(htmlBody);
@@ -73,6 +79,7 @@ const getURLsFromHTML = (htmlBody, baseURL) => {
   return urls;
 };
 
+// FN to extract OG data from HTML body
 const extractOGData = (html) => {
   const dom = new JSDOM(html);
   const metaTags = dom.window.document.querySelectorAll("meta");
