@@ -52,7 +52,7 @@ function App() {
                 <a href={item.url} target="_blank" rel="noopener noreferrer">
                   {item.url}
                 </a>{" "}
-                - {item.hits} times
+                - {item.hits} links found on URL
                 <OGPreview ogData={item.ogData} />
               </li>
             ))}
@@ -70,10 +70,11 @@ const OGPreview = ({ ogData }) => {
 
   return (
     <div className="og-preview">
-      {ogData.title && <h3>{ogData.title}</h3>}
       {ogData.image && <img src={ogData.image} alt="OG preview" />}
-      {ogData.description && <p>{ogData.description}</p>}
-      {/* Add more OG properties as needed */}
+      <div>
+        {ogData.title && <h3>{ogData.title}</h3>}
+        {ogData.description && <p>{ogData.description}</p>}
+      </div>
     </div>
   );
 };
