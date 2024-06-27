@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./App.css";
 
-import OGPreview from "./components/OGPreview";
+import OGPreview from "./components/OGPreview/OGPreview";
 
 function App() {
   const [url, setUrl] = useState("");

@@ -1,4 +1,13 @@
-const OGPreview = ({ ogData }) => {
+import React from "react";
+// import classes from "./OGPreview.module.css";
+
+interface OGData {
+  image: string;
+  title: string;
+  description: string;
+}
+
+const OGPreview: React.FC<{ ogData: OGData }> = ({ ogData }) => {
   if (!ogData) {
     return <p style={{ color: "red" }}>No Open Graph metadata found.</p>;
   }
