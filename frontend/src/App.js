@@ -1,9 +1,9 @@
-// frontend/src/App.js
 import React, { useState } from "react";
 import axios from "axios";
 import "./App.css";
 
-import OGPreview from "./components/OGPreview/OGPreview";
+import OGReport from "./components/OGReport/OGReport";
+import URLInput from "./components/URLInput/URLInput";
 
 function App() {
   const [url, setUrl] = useState("");
@@ -15,9 +15,9 @@ function App() {
     e.preventDefault();
     setError(null);
     setReport(null);
+    setLoading(true);
 
     try {
-      setLoading(true);
       // use axios to send a POST request to the backend
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/crawl`,
@@ -26,41 +26,19 @@ function App() {
       setReport(response.data.report);
       setLoading(false);
     } catch (error) {
+      setLoading(false);
       setError(error.response ? error.response.data.error : error.message);
     }
   };
 
   return (
-    <div className="App">
-      <h1>OG Crawler</h1>
+    <div className="App flex flex-col gap-4">
+      <h1 className="text-3xl font-bold mt-4">OG Crawler</h1>
       <p>Enter a URL to crawl and get Open Graph metadata.</p>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          placeholder="Enter URL"
-        />
-        <button type="submit">Crawl</button>
-      </form>
+      <URLInput url={url} setUrl={setUrl} handleSubmit={handleSubmit} />
       {error && <p style={{ color: "red" }}>{error}</p>}
-      {loading && <p>Crawling page...</p>}
-      {report && (
-        <div>
-          <h2>Report for {url}</h2>
-          <ul>
-            {report.map((item, index) => (
-              <li key={index}>
-                <a href={item.url} target="_blank" rel="noopener noreferrer">
-                  {item.url}
-                </a>{" "}
-                - Link was {item.hits} times found on the page.
-                <OGPreview ogData={item.ogData} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {loading && <p className="animate-pulse text-xl">Crawling page...</p>}
+      {report && <OGReport report={report} />}
     </div>
   );
 }
