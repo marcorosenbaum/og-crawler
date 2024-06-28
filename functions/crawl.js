@@ -1,8 +1,8 @@
 const normalizeUrl = require("@esm2cjs/normalize-url").default;
 const { JSDOM } = require("jsdom");
+const axios = require("axios");
 
-let fetch;
-import("node-fetch").then((module) => {
+let fetch = import("node-fetch").then((module) => {
   fetch = module.default;
 });
 
@@ -26,9 +26,9 @@ const crawlPage = async (baseURL, currentURL, pages) => {
   console.log(`Crawling ${currentURL}`);
 
   try {
-    const response = await fetch(currentURL);
+    const response = await axios.get(currentURL);
     if (response.status > 399) {
-      console.error(`Error fetching ${currentURL}: ${response.status}`);
+      console.error(`--Error fetching ${currentURL}: ${response.status}`);
       return pages;
     }
     const contentType = response.headers.get("content-type");
@@ -37,8 +37,9 @@ const crawlPage = async (baseURL, currentURL, pages) => {
       return pages;
     }
 
+    console.log(response);
     // Get HTML body of url in response
-    const htmlBody = await response.text();
+    const htmlBody = response.data;
 
     // Extract OG data from HTML body and add to pages object
     pages[normalizedCurrentURL].ogData = extractOGData(htmlBody);
@@ -102,4 +103,27 @@ const extractOGData = (html) => {
   return ogData;
 };
 
-module.exports = { crawlPage };
+exports.handler = async function (event, context) {
+  const { url } = JSON.parse(event.body);
+  if (!url) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: "URL is required" }),
+    };
+  }
+
+  try {
+    const pages = await crawlPage(url, url, {});
+    const report = generateReport(pages);
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ url, report }),
+    };
+  } catch (error) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: error.message }),
+    };
+  }
+};
+const { generateReport } = require("./report");
