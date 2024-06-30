@@ -1,6 +1,5 @@
 [build]
-  base = "frontend"
-  functions = "../functions"
-  publish = "build"
+  functions = "functions"
+  publish = "frontend/build"
  
 
