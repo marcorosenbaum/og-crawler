@@ -4,7 +4,7 @@
   command = "npm install && npm run build"
 
 [functions]
-  directory = "functions"  
+  directory = "../functions"  
 
 [[redirects]]
   from = "/*"
