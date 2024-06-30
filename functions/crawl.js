@@ -31,13 +31,14 @@ const crawlPage = async (baseURL, currentURL, pages) => {
       console.error(`--Error fetching ${currentURL}: ${response.status}`);
       return pages;
     }
-    const contentType = response.headers.get("content-type");
+    const contentType = response.headers["content-type"];
     if (!contentType || !contentType.includes("text/html")) {
       console.error(`Non-HTML response for ${currentURL}`);
       return pages;
     }
 
     // Get HTML body of url in response
+
     const htmlBody = response.data;
 
     // Extract OG data from HTML body and add to pages object
