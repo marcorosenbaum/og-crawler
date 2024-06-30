@@ -1,6 +1,6 @@
 [build]
   functions = "functions"
-  publish = "frontend/build"
+  publish = "og-crawler/frontend/build"
 
 [[redirects]]
   from = "/*"
