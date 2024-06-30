@@ -17,12 +17,11 @@ const crawlPage = async (baseURL, currentURL, pages) => {
   // Normalize the URL to avoid duplicates
   const normalizedCurrentURL = normalizeURL(currentURL);
   if (pages[normalizedCurrentURL]) {
-    // pages[normalizedCurrentURL].count++;
+    pages[normalizedCurrentURL].count++;
     return pages;
   }
 
-  // pages[normalizedCurrentURL] = { count: 1, ogData: null };
-  pages[normalizedCurrentURL] = { ogData: null };
+  pages[normalizedCurrentURL] = { count: 1, ogData: null };
 
   console.log(`Crawling ${currentURL}`);
 
