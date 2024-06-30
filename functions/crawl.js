@@ -37,7 +37,6 @@ const crawlPage = async (baseURL, currentURL, pages) => {
       return pages;
     }
 
-    console.log(response);
     // Get HTML body of url in response
     const htmlBody = response.data;
 
