@@ -19,10 +19,7 @@ function App() {
 
     try {
       // use axios to send a POST request to the backend
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/crawl`,
-        { url }
-      );
+      const response = await axios.post("/.netlify/functions/crawl", { url });
       setReport(response.data.report);
       setLoading(false);
     } catch (error) {
