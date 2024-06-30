@@ -1,5 +1,7 @@
 [build]
   functions = "functions"
   publish = "frontend/build"
+  node_version = "20.x"
+
  
 
