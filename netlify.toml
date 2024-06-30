@@ -1,10 +1,7 @@
 [build]
-  base = "/frontend"
-  publish = "build"
+  publish = "frontend/build"
+  functions = "functions"
   command = "npm install && npm run build"
-
-[functions]
-  directory = "functions"  
 
 [[redirects]]
   from = "/*"
@@ -13,3 +10,4 @@
 
 [build.environment]
   NODE_VERSION = "20"
+

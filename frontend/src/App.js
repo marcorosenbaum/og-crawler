@@ -6,7 +6,7 @@ import OGReport from "./components/OGReport/OGReport";
 import URLInput from "./components/URLInput/URLInput";
 
 function App() {
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState("https://coding-bootcamps.eu");
   const [report, setReport] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
