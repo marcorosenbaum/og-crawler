@@ -2,5 +2,8 @@
   "dependencies": {
     "@netlify/functions": "^2.8.0",
     "axios": "^1.7.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }

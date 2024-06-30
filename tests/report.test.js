@@ -1,4 +1,4 @@
-const { sortPages } = require("./report");
+const { sortPages } = require("../functions/report");
 const { expect, test } = require("@jest/globals");
 
 test("sortPages, 2pages", () => {
