@@ -3,5 +3,8 @@
   publish = "frontend/build"
   node_version = "20.x"
 
- 
+[build.environment]
+  NODE_VERSION = "20.x"           
 
+[functions]
+  node_bundler = "esbuild"
