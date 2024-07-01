@@ -2,6 +2,10 @@ const normalizeUrl = require("@esm2cjs/normalize-url").default;
 const { JSDOM } = require("jsdom");
 const axios = require("axios");
 
+const { generateReport } = require("./report");
+const { extractOGData } = require("./extractOGData");
+const { getURLsFromHTML } = require("./getURLsFromHTML");
+
 let fetch = import("node-fetch").then((module) => {
   fetch = module.default;
 });
@@ -38,7 +42,6 @@ const crawlPage = async (baseURL, currentURL, pages) => {
     }
 
     // Get HTML body of url in response
-
     const htmlBody = response.data;
 
     // Extract OG data from HTML body and add to pages object
@@ -66,47 +69,46 @@ const normalizeURL = (url) => {
 };
 
 // FN to extract URLs from HTML body
-const getURLsFromHTML = (htmlBody, baseURL) => {
-  const urls = [];
-  const dom = new JSDOM(htmlBody);
-  const linkElements = dom.window.document.querySelectorAll("a");
-  for (const linkElement of linkElements) {
-    let href = linkElement.href;
-    if (href.startsWith("/")) {
-      href = new URL(href, baseURL).href;
-    }
-    try {
-      const urlObj = new URL(href);
-      urls.push(urlObj.href);
-    } catch (error) {
-      console.error(`Invalid URL ${href}: ${error.message}`);
-    }
-  }
-  return urls;
-};
+// const getURLsFromHTML = (htmlBody, baseURL) => {
+//   const urls = [];
+//   const dom = new JSDOM(htmlBody);
+//   const linkElements = dom.window.document.querySelectorAll("a");
+//   for (const linkElement of linkElements) {
+//     let href = linkElement.href;
+//     if (href.startsWith("/")) {
+//       href = new URL(href, baseURL).href;
+//     }
+//     try {
+//       const urlObj = new URL(href);
+//       urls.push(urlObj.href);
+//     } catch (error) {
+//       console.error(`Invalid URL ${href}: ${error.message}`);
+//     }
+//   }
+//   return urls;
+// };
 
-// FN to extract OG data from HTML body
-const extractOGData = (html) => {
-  const dom = new JSDOM(html);
-  const metaTags = dom.window.document.querySelectorAll("meta");
-  const ogData = {};
+// const extractOGData = (html) => {
+//   const dom = new JSDOM(html);
+//   const metaTags = dom.window.document.querySelectorAll("meta");
+//   const ogData = {};
 
-  metaTags.forEach((tag) => {
-    if (
-      tag.getAttribute("property") &&
-      tag.getAttribute("property").startsWith("og:")
-    ) {
-      const property = tag.getAttribute("property").slice(3);
-      ogData[property] = tag.getAttribute("content");
-    }
-  });
+//   metaTags.forEach((tag) => {
+//     if (
+//       tag.getAttribute("property") &&
+//       tag.getAttribute("property").startsWith("og:")
+//     ) {
+//       const property = tag.getAttribute("property").slice(3);
+//       ogData[property] = tag.getAttribute("content");
+//     }
+//   });
 
-  if (Object.keys(ogData).length === 0) {
-    return null;
-  }
+//   if (Object.keys(ogData).length === 0) {
+//     return null;
+//   }
 
-  return ogData;
-};
+//   return ogData;
+// };
 
 exports.handler = async function (event, context) {
   const { url } = JSON.parse(event.body);
@@ -131,4 +133,3 @@ exports.handler = async function (event, context) {
     };
   }
 };
-const { generateReport } = require("./report");
