@@ -27,7 +27,7 @@ const crawlPage = async (baseURL, currentURL, pages) => {
 
   pages[normalizedCurrentURL] = { count: 1, ogData: null };
 
-  console.log(`Crawling ${currentURL}`);
+  // console.log(`Crawling ${currentURL}`);
 
   try {
     const response = await axios.get(currentURL);
