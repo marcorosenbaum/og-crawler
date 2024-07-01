@@ -46,9 +46,14 @@ const crawlPage = async (baseURL, currentURL, pages) => {
 
     // Get URLs from HTML body and crawl each of them
     const nextURLs = getURLsFromHTML(htmlBody, baseURL);
-    for (const nextURL of nextURLs) {
-      pages = await crawlPage(baseURL, nextURL, pages);
-    }
+    const nextPages = await Promise.all(
+      nextURLs.map(async (nextURL) => {
+        pages = await crawlPage(baseURL, nextURL, pages);
+      })
+    );
+    nextPages.forEach((page) => {
+      Object.assign(pages, page);
+    });
   } catch (error) {
     console.error(`Error fetching ${currentURL}: ${error.message}`);
   }
