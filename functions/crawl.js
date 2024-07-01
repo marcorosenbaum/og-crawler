@@ -27,8 +27,6 @@ const crawlPage = async (baseURL, currentURL, pages) => {
 
   pages[normalizedCurrentURL] = { count: 1, ogData: null };
 
-  // console.log(`Crawling ${currentURL}`);
-
   try {
     const response = await axios.get(currentURL);
     if (response.status > 399) {
@@ -43,9 +41,6 @@ const crawlPage = async (baseURL, currentURL, pages) => {
 
     // Get HTML body of url in response
     const htmlBody = response.data;
-
-    // Extract OG data from HTML body and add to pages object
-    // pages[normalizedCurrentURL].ogData = extractOGData(htmlBody);
 
     // Get URLs from HTML body and crawl each of them
     const nextURLs = getURLsFromHTML(htmlBody, baseURL);
