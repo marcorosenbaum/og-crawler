@@ -68,48 +68,6 @@ const normalizeURL = (url) => {
   return normalizeUrl(url, { stripWWW: false });
 };
 
-// FN to extract URLs from HTML body
-// const getURLsFromHTML = (htmlBody, baseURL) => {
-//   const urls = [];
-//   const dom = new JSDOM(htmlBody);
-//   const linkElements = dom.window.document.querySelectorAll("a");
-//   for (const linkElement of linkElements) {
-//     let href = linkElement.href;
-//     if (href.startsWith("/")) {
-//       href = new URL(href, baseURL).href;
-//     }
-//     try {
-//       const urlObj = new URL(href);
-//       urls.push(urlObj.href);
-//     } catch (error) {
-//       console.error(`Invalid URL ${href}: ${error.message}`);
-//     }
-//   }
-//   return urls;
-// };
-
-// const extractOGData = (html) => {
-//   const dom = new JSDOM(html);
-//   const metaTags = dom.window.document.querySelectorAll("meta");
-//   const ogData = {};
-
-//   metaTags.forEach((tag) => {
-//     if (
-//       tag.getAttribute("property") &&
-//       tag.getAttribute("property").startsWith("og:")
-//     ) {
-//       const property = tag.getAttribute("property").slice(3);
-//       ogData[property] = tag.getAttribute("content");
-//     }
-//   });
-
-//   if (Object.keys(ogData).length === 0) {
-//     return null;
-//   }
-
-//   return ogData;
-// };
-
 exports.handler = async function (event, context) {
   const { url } = JSON.parse(event.body);
   if (!url) {
