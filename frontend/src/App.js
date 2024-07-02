@@ -12,21 +12,25 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [OGDatafetched, setOGDatafetched] = useState(false);
 
-  async function fetchOGData(report) {
+  async function fetchOGData(item) {
     const response = await axios.post("/.netlify/functions/extractOGData", {
-      report,
+      url: item.url,
+      hits: item.hits,
+      ogData: item.ogData,
     });
-    return response.data.newReport;
+    return response.data.result;
   }
 
   useEffect(() => {
     const fetchData = async () => {
       if (report && !OGDatafetched) {
         try {
-          const OGReport = await fetchOGData(report);
+          console.log(report);
+          const OGReport = await fetchOGData(report[0]);
           setReport((prevReport) => [...OGReport]);
           setOGDatafetched(true);
           setLoading(false);
+          console.log(OGReport);
         } catch (error) {
           console.error(error);
         }
