@@ -2,9 +2,10 @@ import React from "react";
 
 const URLInput: React.FC<{
   url: string;
+  loading: boolean;
   setUrl: (newUrl: string) => void;
   handleSubmit: () => void;
-}> = ({ url, setUrl, handleSubmit }) => {
+}> = ({ url, loading, setUrl, handleSubmit }) => {
   return (
     <form onSubmit={handleSubmit}>
       <input
@@ -15,8 +16,13 @@ const URLInput: React.FC<{
         placeholder="Enter URL"
       />
       <button
+        disabled={loading}
         type="submit"
-        className="border rounded hover:bg-white  duration-300"
+        className={`border rounded   duration-300 ${
+          loading
+            ? "opacity-45 text-black/50 cursor-not-allowed"
+            : "hover:bg-white"
+        }`}
       >
         Crawl
       </button>

@@ -33,13 +33,12 @@ exports.handler = async function (event, context) {
     const response = await axios.get(currentURL);
     if (response.status > 399) {
       console.error(`--Error fetching ${currentURL}: ${response.status}`);
+      result = item; //???
     }
     const contentType = response.headers["content-type"];
     if (!contentType || !contentType.includes("text/html")) {
       console.error(`Non-HTML response for ${currentURL}`);
-      return {
-        item,
-      };
+      result = item; //???
     }
 
     const htmlBody = response.data;

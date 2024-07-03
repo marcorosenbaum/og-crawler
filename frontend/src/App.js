@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import "./App.css";
 
@@ -10,48 +10,18 @@ function App() {
   const [report, setReport] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [OGDatafetched, setOGDatafetched] = useState(false);
-
-  async function fetchOGData(item) {
-    const response = await axios.post("/.netlify/functions/extractOGData", {
-      url: item.url,
-      hits: item.hits,
-      ogData: item.ogData,
-    });
-    return response.data.result;
-  }
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (report && !OGDatafetched) {
-        try {
-          console.log(report);
-          const OGReport = await fetchOGData(report[0]);
-          setReport((prevReport) => [...OGReport]);
-          setOGDatafetched(true);
-          setLoading(false);
-          console.log(OGReport);
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    };
-
-    fetchData();
-  }, [report, OGDatafetched, setReport, setOGDatafetched]);
+  const [ogDatafetched, setOgDatafetched] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-    setReport(null);
-    setOGDatafetched(false);
     setLoading(true);
+    setReport(null);
+    setError(null);
+    setOgDatafetched(false);
 
     try {
-      if (!OGDatafetched) {
-        const response = await axios.post("/.netlify/functions/crawl", { url });
-        setReport(response.data.report);
-      }
+      const response = await axios.post("/.netlify/functions/crawl", { url });
+      setReport(response.data.report);
     } catch (error) {
       setLoading(false);
       setError(error.response ? error.response.data.error : error.message);
@@ -62,10 +32,27 @@ function App() {
     <div className="App flex flex-col gap-4">
       <h1 className="text-3xl font-bold mt-4">OG Crawler</h1>
       <p>Enter a URL to crawl and get Open Graph metadata.</p>
-      <URLInput url={url} setUrl={setUrl} handleSubmit={handleSubmit} />
+      <URLInput
+        url={url}
+        setUrl={setUrl}
+        handleSubmit={handleSubmit}
+        loading={loading}
+      />
       {error && <p style={{ color: "red" }}>{error}</p>}
-      {loading && <p className="animate-pulse text-xl">Crawling page...</p>}
-      {OGDatafetched && <OGReport report={report} />}
+      {loading && (
+        <p className="animate-pulse text-xl text-green-600">Crawling page...</p>
+      )}
+      {ogDatafetched && (
+        <p className="text-xl text-green-600">Finished crawling!</p>
+      )}
+
+      <OGReport
+        report={report}
+        loading={loading}
+        setLoading={setLoading}
+        ogDatafetched={ogDatafetched}
+        setOgDatafetched={setOgDatafetched}
+      />
     </div>
   );
 }
