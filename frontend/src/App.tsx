@@ -5,24 +5,33 @@ import "./App.css";
 import OGReport from "./components/OGReport/OGReport";
 import URLInput from "./components/URLInput/URLInput";
 
-function App() {
-  const [url, setUrl] = useState("https://coding-bootcamps.eu");
-  const [report, setReport] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [ogDatafetched, setOgDatafetched] = useState(false);
+interface Report {
+  url: string;
+  hits: number;
+  ogData: {
+    image: string;
+    title: string;
+    description: string;
+  };
+}
+const App: React.FC = () => {
+  const [url, setUrl] = useState<string>("https://coding-bootcamps.eu");
+  const [report, setReport] = useState<Report[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [ogDataFetched, setOgDataFetched] = useState<boolean>(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setReport(null);
     setError(null);
-    setOgDatafetched(false);
+    setOgDataFetched(false);
 
     try {
       const response = await axios.post("/.netlify/functions/crawl", { url });
       setReport(response.data.report);
-    } catch (error) {
+    } catch (error: any) {
       setLoading(false);
       setError(error.response ? error.response.data.error : error.message);
     }
@@ -42,7 +51,7 @@ function App() {
       {loading && (
         <p className="animate-pulse text-xl text-green-600">Crawling page...</p>
       )}
-      {ogDatafetched && (
+      {ogDataFetched && (
         <p className="text-xl text-green-600">Finished crawling!</p>
       )}
 
@@ -50,11 +59,11 @@ function App() {
         report={report}
         loading={loading}
         setLoading={setLoading}
-        ogDatafetched={ogDatafetched}
-        setOgDatafetched={setOgDatafetched}
+        ogDataFetched={ogDataFetched}
+        setOgDatafetched={setOgDataFetched}
       />
     </div>
   );
-}
+};
 
 export default App;
