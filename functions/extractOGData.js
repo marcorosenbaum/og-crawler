@@ -24,40 +24,36 @@ const extractOGData = (html) => {
 };
 
 exports.handler = async function (event, context) {
-  const { report } = JSON.parse(event.body);
-  const newReport = [];
-  const promises = report.map(async (item) => {
-    const currentURL = item.url;
-    try {
-      const response = await axios.get(currentURL);
-      if (response.status > 399) {
-        console.error(`--Error fetching ${currentURL}: ${response.status}`);
-      }
-      const contentType = response.headers["content-type"];
-      if (!contentType || !contentType.includes("text/html")) {
-        console.error(`Non-HTML response for ${currentURL}`);
-        return {
-          item,
-        };
-      }
+  const item = JSON.parse(event.body);
+  let result = {};
 
-      const htmlBody = response.data;
-      const newOGData = extractOGData(htmlBody);
-      return {
-        url: currentURL,
-        hits: item.hits,
-        ogData: newOGData,
-      };
-    } catch (error) {
-      console.error(`Error fetching ${currentURL}: ${error.message}`);
+  const currentURL = item.url;
+
+  try {
+    const response = await axios.get(currentURL);
+    if (response.status > 399) {
+      console.error(`--Error fetching ${currentURL}: ${response.status}`);
+      result = item; //???
     }
-  });
+    const contentType = response.headers["content-type"];
+    if (!contentType || !contentType.includes("text/html")) {
+      console.error(`Non-HTML response for ${currentURL}`);
+      result = item; //???
+    }
 
-  const results = await Promise.all(promises);
-  newReport.push(...results);
+    const htmlBody = response.data;
+    const newOGData = extractOGData(htmlBody);
+    result = {
+      url: currentURL,
+      hits: item.hits,
+      ogData: newOGData,
+    };
+  } catch (error) {
+    console.error(`Error fetching ${currentURL}: ${error.message}`);
+  }
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ newReport }),
+    body: JSON.stringify({ result }),
   };
 };
