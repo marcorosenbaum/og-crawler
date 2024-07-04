@@ -1,6 +1,6 @@
-const { JSDOM } = require("jsdom");
+import { JSDOM } from "jsdom";
 
-const getURLsFromHTML = (htmlBody, baseURL) => {
+const getURLsFromHTML = (htmlBody: string, baseURL: string) => {
   const urls = [];
   const dom = new JSDOM(htmlBody);
   const linkElements = dom.window.document.querySelectorAll("a");
@@ -12,11 +12,11 @@ const getURLsFromHTML = (htmlBody, baseURL) => {
     try {
       const urlObj = new URL(href);
       urls.push(urlObj.href);
-    } catch (error) {
+    } catch (error: any) {
       console.error(`Invalid URL ${href}: ${error.message}`);
     }
   }
   return urls;
 };
 
-module.exports = { getURLsFromHTML };
+export { getURLsFromHTML };

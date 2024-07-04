@@ -4,7 +4,7 @@ const URLInput: React.FC<{
   url: string;
   loading: boolean;
   setUrl: (newUrl: string) => void;
-  handleSubmit: () => void;
+  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }> = ({ url, loading, setUrl, handleSubmit }) => {
   return (
     <form onSubmit={handleSubmit}>

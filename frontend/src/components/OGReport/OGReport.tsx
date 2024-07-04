@@ -15,7 +15,7 @@ interface Report {
 }
 
 const OGReport: React.FC<{
-  report: Report[];
+  report: Report[] | null;
   ogDataFetched: boolean;
   loading: boolean;
   setLoading: (value: boolean) => void;
