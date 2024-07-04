@@ -1,19 +1,20 @@
-const normalizeUrl = require("@esm2cjs/normalize-url").default;
-const { JSDOM } = require("jsdom");
-const axios = require("axios");
+import normalizeUrl from "@esm2cjs/normalize-url";
+import axios from "axios";
 
-const { generateReport } = require("./report");
-const { extractOGData } = require("./extractOGData");
-const { getURLsFromHTML } = require("./getURLsFromHTML");
+import { generateReport } from "./report";
+import { getURLsFromHTML } from "./getURLsFromHTML";
 
-let fetch = import("node-fetch").then((module) => {
-  fetch = module.default;
-});
+// interface Page {
+//   url: string;
+//   count: number;
+//   ogData: any;
+// }
 
-// FN crawls the given URL and returns a pages object with the count of each page and its OG data
-const crawlPage = async (baseURL, currentURL, pages) => {
+// FN crawls the given URL and returns a pages object
+// with the count of each page and its OG data
+const crawlPage = async (baseURL: string, currentURL: string, pages: any) => {
   const baseURLObj = new URL(baseURL);
-  const currentURLObj = new URL(currentURL);
+  const currentURLObj = new URL(currentURL, baseURL);
   if (baseURLObj.hostname !== currentURLObj.hostname) {
     return pages;
   }
@@ -52,37 +53,39 @@ const crawlPage = async (baseURL, currentURL, pages) => {
     nextPages.forEach((page) => {
       Object.assign(pages, page);
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error fetching ${currentURL}: ${error.message}`);
   }
 
   return pages;
 };
 
-const normalizeURL = (url) => {
+const normalizeURL = (url: string) => {
   return normalizeUrl(url, { stripWWW: false });
 };
 
-exports.handler = async function (event, context) {
-  const { url } = JSON.parse(event.body);
-  if (!url) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ error: "URL is required" }),
-    };
-  }
+exports.handler = async function (event: Request) {
+  if (event.body !== null) {
+    const { url } = JSON.parse(event.body.toString());
+    if (!url) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "URL is required" }),
+      };
+    }
 
-  try {
-    const pages = await crawlPage(url, url, {});
-    const report = generateReport(pages);
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ url, report }),
-    };
-  } catch (error) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: error.message }),
-    };
+    try {
+      const pages = await crawlPage(url, url, {});
+      const report = generateReport(pages);
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ url, report }),
+      };
+    } catch (error: any) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: error.message }),
+      };
+    }
   }
 };
