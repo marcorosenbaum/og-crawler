@@ -1,4 +1,9 @@
 "use strict";
+// interface Page {
+//   url: string;
+//   count: number;
+//   ogData: any;
+// }
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateReport = generateReport;
 function generateReport(pages) {

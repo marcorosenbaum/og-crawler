@@ -6,7 +6,7 @@ import axios from "axios";
 
 interface Report {
   url: string;
-  hits: number;
+  count: number;
   ogData: {
     image: string;
     title: string;
@@ -26,7 +26,7 @@ const OGReport: React.FC<{
   async function fetchOGData(item: Report) {
     const response = await axios.post("/.netlify/functions/extractOGData", {
       url: item.url,
-      hits: item.hits,
+      count: item.count,
       ogData: item.ogData,
     });
     return response.data.result;
@@ -70,7 +70,7 @@ const OGReport: React.FC<{
             >
               {item.url}
             </a>
-            <p>Link was found {item.hits} times on the page.</p>
+            <p>Link was found {item.count} times on the page.</p>
             <OGLinkPreview ogData={item.ogData} />
           </li>
         ))}

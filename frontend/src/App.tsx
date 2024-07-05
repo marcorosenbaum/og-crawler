@@ -7,7 +7,7 @@ import URLInput from "./components/URLInput/URLInput";
 
 interface Report {
   url: string;
-  hits: number;
+  count: number;
   ogData: {
     image: string;
     title: string;
@@ -40,7 +40,7 @@ const App: React.FC = () => {
   return (
     <div className="App flex flex-col gap-4">
       <h1 className="text-3xl font-bold mt-4">OG Crawler</h1>
-      <p>Enter a URL to crawl and get Open Graph metadata.</p>
+      <p>Enter an URL to get Open Graph meta data.</p>
       <URLInput
         url={url}
         setUrl={setUrl}
@@ -49,10 +49,12 @@ const App: React.FC = () => {
       />
       {error && <p style={{ color: "red" }}>{error}</p>}
       {loading && (
-        <p className="animate-pulse text-xl text-green-600">Crawling page...</p>
+        <p className="animate-pulse text-xl text-green-600">Getting data...</p>
       )}
       {ogDataFetched && (
-        <p className="text-xl text-green-600">Finished crawling!</p>
+        <p className="text-xl text-green-600">
+          Finished! Found {report?.length} links.
+        </p>
       )}
 
       <OGReport

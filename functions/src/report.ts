@@ -1,10 +1,10 @@
-interface Page {
-  url: string;
-  count: number;
-  ogData: any;
-}
+// interface Page {
+//   url: string;
+//   count: number;
+//   ogData: any;
+// }
 
-function generateReport(pages: Page[]) {
+function generateReport(pages: Record<string, { count: number; ogData: any }>) {
   const sortedPages = sortPages(pages);
   return sortedPages.map(([url, data]) => ({
     url,
@@ -13,7 +13,7 @@ function generateReport(pages: Page[]) {
   }));
 }
 
-function sortPages(pages: Page[]) {
+function sortPages(pages: Record<string, { count: number; ogData: any }>) {
   const pagesArray = Object.entries(pages);
   pagesArray.sort((a, b) => b[1].count - a[1].count);
   return pagesArray;

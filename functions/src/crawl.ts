@@ -5,21 +5,23 @@ import { generateReport } from "./report";
 import { getURLsFromHTML } from "./getURLsFromHTML";
 
 // interface Page {
-//   url: string;
-//   count: number;
-//   ogData: any;
+//   string: {
+//     count: number;
+//     ogData: any;
+//   };
 // }
 
-// FN crawls the given URL and returns a pages object
-// with the count of each page and its OG data
-const crawlPage = async (baseURL: string, currentURL: string, pages: any) => {
+const crawlPage = async (
+  baseURL: string,
+  currentURL: string,
+  pages: Record<string, { count: number; ogData: any }>
+) => {
   const baseURLObj = new URL(baseURL);
   const currentURLObj = new URL(currentURL, baseURL);
   if (baseURLObj.hostname !== currentURLObj.hostname) {
     return pages;
   }
 
-  // Normalize the URL to avoid duplicates
   const normalizedCurrentURL = normalizeURL(currentURL);
   if (pages[normalizedCurrentURL]) {
     pages[normalizedCurrentURL].count++;
@@ -40,10 +42,8 @@ const crawlPage = async (baseURL: string, currentURL: string, pages: any) => {
       return pages;
     }
 
-    // Get HTML body of url in response
     const htmlBody = response.data;
 
-    // Get URLs from HTML body and crawl each of them
     const nextURLs = getURLsFromHTML(htmlBody, baseURL);
     const nextPages = await Promise.all(
       nextURLs.map(async (nextURL) => {

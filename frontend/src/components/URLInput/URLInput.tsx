@@ -24,7 +24,7 @@ const URLInput: React.FC<{
             : "hover:bg-white"
         }`}
       >
-        Crawl
+        Get Data
       </button>
     </form>
   );

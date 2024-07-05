@@ -14,9 +14,13 @@ const OGPreview: React.FC<{ ogData: OGData }> = ({ ogData }) => {
   }
 
   return (
-    <div className="flex  gap-8 border bg-gray-300 p-4">
+    <div className="flex  gap-8 border rounded-xl bg-gray-300 p-4">
       {ogData.image && (
-        <img className="max-h-40" src={ogData.image} alt="OG preview" />
+        <img
+          className="max-h-40 rounded-xl"
+          src={ogData.image}
+          alt="OG preview"
+        />
       )}
       <div className="text-center w-full">
         {ogData.title && (

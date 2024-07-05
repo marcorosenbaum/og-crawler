@@ -17,19 +17,17 @@ const axios_1 = __importDefault(require("axios"));
 const report_1 = require("./report");
 const getURLsFromHTML_1 = require("./getURLsFromHTML");
 // interface Page {
-//   url: string;
-//   count: number;
-//   ogData: any;
+//   string: {
+//     count: number;
+//     ogData: any;
+//   };
 // }
-// FN crawls the given URL and returns a pages object
-// with the count of each page and its OG data
 const crawlPage = (baseURL, currentURL, pages) => __awaiter(void 0, void 0, void 0, function* () {
     const baseURLObj = new URL(baseURL);
     const currentURLObj = new URL(currentURL, baseURL);
     if (baseURLObj.hostname !== currentURLObj.hostname) {
         return pages;
     }
-    // Normalize the URL to avoid duplicates
     const normalizedCurrentURL = normalizeURL(currentURL);
     if (pages[normalizedCurrentURL]) {
         pages[normalizedCurrentURL].count++;
@@ -47,9 +45,7 @@ const crawlPage = (baseURL, currentURL, pages) => __awaiter(void 0, void 0, void
             console.error(`Non-HTML response for ${currentURL}`);
             return pages;
         }
-        // Get HTML body of url in response
         const htmlBody = response.data;
-        // Get URLs from HTML body and crawl each of them
         const nextURLs = (0, getURLsFromHTML_1.getURLsFromHTML)(htmlBody, baseURL);
         const nextPages = yield Promise.all(nextURLs.map((nextURL) => __awaiter(void 0, void 0, void 0, function* () {
             pages = yield crawlPage(baseURL, nextURL, pages);
