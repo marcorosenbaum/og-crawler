@@ -5,13 +5,6 @@ import xml2js from "xml2js";
 import { generateReport } from "./report";
 import { getURLsFromHTML } from "./getURLsFromHTML";
 
-// interface Page {
-//   string: {
-//     count: number;
-//     ogData: any;
-//   };
-// }
-
 const crawlPage = async (
   baseURL: string,
   currentURL: string,
@@ -80,7 +73,6 @@ exports.handler = async function (event: Request) {
       const sitemap = await axios.get(`${normalizedURL}/sitemap.xml`);
 
       if (!sitemap) {
-        console.log("No sitemap found");
         const pages = await crawlPage(url, url, {});
         const report = generateReport(pages);
         return {
@@ -88,7 +80,6 @@ exports.handler = async function (event: Request) {
           body: JSON.stringify({ url, report }),
         };
       } else if (sitemap) {
-        console.log("Sitemap found");
         const parser = new xml2js.Parser();
         const sitemapData = await parser.parseStringPromise(sitemap.data);
         const urls = sitemapData.urlset.url.map((url: any) => url.loc[0]);

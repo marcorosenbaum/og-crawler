@@ -42,7 +42,10 @@ const OGReport: React.FC<{
     const fetchData = async () => {
       if (report && !ogDataFetched) {
         try {
-          for (let i = 0; i < report.length; i++) {
+          // set limit to 80 to avoid hitting the API rate limit
+          // remember to give user feedback
+          const maxLength = report.length > 80 ? 80 : report.length;
+          for (let i = 0; i < maxLength; i++) {
             const OGItem = await fetchOGData(report[i]);
             setNewOGReport((prev) => [...prev, OGItem]);
           }
