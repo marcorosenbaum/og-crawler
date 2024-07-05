@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "@netlify/functions": "^2.8.0",
-    "axios": "^1.7.2"
+    "axios": "^1.7.2",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "@esm2cjs/normalize-url": "^8.0.0",
