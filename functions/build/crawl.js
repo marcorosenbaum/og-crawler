@@ -14,14 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const normalize_url_1 = __importDefault(require("@esm2cjs/normalize-url"));
 const axios_1 = __importDefault(require("axios"));
+const xml2js_1 = __importDefault(require("xml2js"));
 const report_1 = require("./report");
 const getURLsFromHTML_1 = require("./getURLsFromHTML");
-// interface Page {
-//   string: {
-//     count: number;
-//     ogData: any;
-//   };
-// }
 const crawlPage = (baseURL, currentURL, pages) => __awaiter(void 0, void 0, void 0, function* () {
     const baseURLObj = new URL(baseURL);
     const currentURLObj = new URL(currentURL, baseURL);
@@ -73,12 +68,30 @@ exports.handler = function (event) {
                 };
             }
             try {
-                const pages = yield crawlPage(url, url, {});
-                const report = (0, report_1.generateReport)(pages);
-                return {
-                    statusCode: 200,
-                    body: JSON.stringify({ url, report }),
-                };
+                const normalizedURL = normalizeURL(url);
+                const sitemap = yield axios_1.default.get(`${normalizedURL}/sitemap.xml`);
+                if (!sitemap) {
+                    const pages = yield crawlPage(url, url, {});
+                    const report = (0, report_1.generateReport)(pages);
+                    return {
+                        statusCode: 200,
+                        body: JSON.stringify({ url, report }),
+                    };
+                }
+                else if (sitemap) {
+                    const parser = new xml2js_1.default.Parser();
+                    const sitemapData = yield parser.parseStringPromise(sitemap.data);
+                    const urls = sitemapData.urlset.url.map((url) => url.loc[0]);
+                    const report = urls.map((url) => ({
+                        url,
+                        count: 1,
+                        ogData: null,
+                    }));
+                    return {
+                        statusCode: 200,
+                        body: JSON.stringify({ url, report }),
+                    };
+                }
             }
             catch (error) {
                 return {

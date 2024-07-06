@@ -1,15 +1,9 @@
 import normalizeUrl from "@esm2cjs/normalize-url";
 import axios from "axios";
+import xml2js from "xml2js";
 
 import { generateReport } from "./report";
 import { getURLsFromHTML } from "./getURLsFromHTML";
-
-// interface Page {
-//   string: {
-//     count: number;
-//     ogData: any;
-//   };
-// }
 
 const crawlPage = async (
   baseURL: string,
@@ -75,12 +69,31 @@ exports.handler = async function (event: Request) {
     }
 
     try {
-      const pages = await crawlPage(url, url, {});
-      const report = generateReport(pages);
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ url, report }),
-      };
+      const normalizedURL = normalizeURL(url);
+      const sitemap = await axios.get(`${normalizedURL}/sitemap.xml`);
+
+      if (!sitemap) {
+        const pages = await crawlPage(url, url, {});
+        const report = generateReport(pages);
+        return {
+          statusCode: 200,
+          body: JSON.stringify({ url, report }),
+        };
+      } else if (sitemap) {
+        const parser = new xml2js.Parser();
+        const sitemapData = await parser.parseStringPromise(sitemap.data);
+        const urls = sitemapData.urlset.url.map((url: any) => url.loc[0]);
+        const report = urls.map((url: string) => ({
+          url,
+          count: 1,
+          ogData: null,
+        }));
+
+        return {
+          statusCode: 200,
+          body: JSON.stringify({ url, report }),
+        };
+      }
     } catch (error: any) {
       return {
         statusCode: 500,
