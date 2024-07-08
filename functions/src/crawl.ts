@@ -5,10 +5,16 @@ import xml2js from "xml2js";
 import { generateReport } from "./report";
 import { getURLsFromHTML } from "./getURLsFromHTML";
 
+interface Page {
+  url: string;
+  count: number;
+  ogData: any;
+}
+
 const crawlPage = async (
   baseURL: string,
   currentURL: string,
-  pages: Record<string, { count: number; ogData: any }>
+  pages: (Page | void)[]
 ) => {
   const baseURLObj = new URL(baseURL);
   const currentURLObj = new URL(currentURL, baseURL);
@@ -17,12 +23,15 @@ const crawlPage = async (
   }
 
   const normalizedCurrentURL = normalizeURL(currentURL);
-  if (pages[normalizedCurrentURL]) {
-    pages[normalizedCurrentURL].count++;
+  const existingPage = pages.find(
+    (page) => (page as Page)?.url === normalizedCurrentURL
+  );
+  if (existingPage) {
+    existingPage.count++;
     return pages;
+  } else {
+    pages.push({ url: normalizedCurrentURL, count: 1, ogData: null });
   }
-
-  pages[normalizedCurrentURL] = { count: 1, ogData: null };
 
   try {
     const response = await axios.get(currentURL);
@@ -45,7 +54,7 @@ const crawlPage = async (
       })
     );
     nextPages.forEach((page) => {
-      Object.assign(pages, page);
+      pages.push(page);
     });
   } catch (error: any) {
     console.error(`Error fetching ${currentURL}: ${error.message}`);
@@ -72,14 +81,7 @@ exports.handler = async function (event: Request) {
       const normalizedURL = normalizeURL(url);
       const sitemap = await axios.get(`${normalizedURL}/sitemap.xml`);
 
-      if (!sitemap) {
-        const pages = await crawlPage(url, url, {});
-        const report = generateReport(pages);
-        return {
-          statusCode: 200,
-          body: JSON.stringify({ url, report }),
-        };
-      } else if (sitemap) {
+      if (sitemap) {
         const parser = new xml2js.Parser();
         const sitemapData = await parser.parseStringPromise(sitemap.data);
         const urls = sitemapData.urlset.url.map((url: any) => url.loc[0]);
@@ -89,6 +91,14 @@ exports.handler = async function (event: Request) {
           ogData: null,
         }));
 
+        return {
+          statusCode: 200,
+          body: JSON.stringify({ url, report }),
+        };
+      } else if (!sitemap) {
+        // const pages = await crawlPage(url, url, {});
+        const pages = await crawlPage(url, url, []);
+        const report = generateReport(pages);
         return {
           statusCode: 200,
           body: JSON.stringify({ url, report }),
