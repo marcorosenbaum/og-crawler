@@ -39,7 +39,7 @@ const App: React.FC = () => {
 
   return (
     <div className="App flex flex-col gap-4">
-      <h1 className="text-3xl font-bold mt-4">OG Crawler</h1>
+      <h1 className="text-3xl font-bold mt-4">OG Crawler Demo</h1>
       <p>Enter an URL to get Open Graph meta data.</p>
       <URLInput
         url={url}
@@ -53,7 +53,9 @@ const App: React.FC = () => {
       )}
       {ogDataFetched && (
         <p className="text-xl text-green-600">
-          Finished! Found {report?.length} links. The OG preview is limit to 80.
+          Finished! Found {report?.length} links. The OG preview is limit to 80
+          previews.
+          <br />
           If you want to see a preview of all links, ...
         </p>
       )}
