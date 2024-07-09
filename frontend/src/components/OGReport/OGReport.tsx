@@ -20,7 +20,7 @@ const OGReport: React.FC<{
   loading: boolean;
   setLoading: (value: boolean) => void;
   setOgDatafetched: (value: boolean) => void;
-}> = ({ report, loading, setLoading, ogDataFetched, setOgDatafetched }) => {
+}> = ({ report, setLoading, ogDataFetched, setOgDatafetched }) => {
   const [newOGReport, setNewOGReport] = useState<Report[]>([]);
 
   async function fetchOGData(item: Report) {

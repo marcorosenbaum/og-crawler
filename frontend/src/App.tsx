@@ -53,7 +53,8 @@ const App: React.FC = () => {
       )}
       {ogDataFetched && (
         <p className="text-xl text-green-600">
-          Finished! Found {report?.length} links.
+          Finished! Found {report?.length} links. The OG preview is limit to 80.
+          If you want to see a preview of all links, ...
         </p>
       )}
 

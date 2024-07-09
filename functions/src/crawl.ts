@@ -11,8 +11,6 @@ interface Page {
   ogData: any;
 }
 
-const excludeURLs = [];
-
 const crawlPage = async (
   baseURL: string,
   currentURL: string,
@@ -25,11 +23,11 @@ const crawlPage = async (
   }
 
   const normalizedCurrentURL = normalizeURL(currentURL);
-  const existingPage = pages.find(
+  const alreadyExistingPage = pages.find(
     (page) => (page as Page)?.url === normalizedCurrentURL
   );
-  if (existingPage) {
-    existingPage.count++;
+  if (alreadyExistingPage) {
+    alreadyExistingPage.count++;
     return pages;
   } else {
     pages.push({ url: normalizedCurrentURL, count: 1, ogData: null });
@@ -48,8 +46,8 @@ const crawlPage = async (
     }
 
     const htmlBody = response.data;
-
     const nextURLs = getURLsFromHTML(htmlBody, baseURL);
+
     const newPages = await Promise.allSettled(
       nextURLs.map(async (nextURL) => {
         return await crawlPage(baseURL, nextURL, pages);

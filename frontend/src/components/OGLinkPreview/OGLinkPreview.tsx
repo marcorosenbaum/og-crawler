@@ -1,6 +1,4 @@
 import React from "react";
-// import not working, check and fix css module setup in tsconfig
-// import classes from "./OGPreview.module.css";
 
 interface OGData {
   image: string;

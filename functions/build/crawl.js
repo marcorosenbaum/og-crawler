@@ -24,9 +24,9 @@ const crawlPage = (baseURL, currentURL, pages) => __awaiter(void 0, void 0, void
         return pages;
     }
     const normalizedCurrentURL = normalizeURL(currentURL);
-    const existingPage = pages.find((page) => (page === null || page === void 0 ? void 0 : page.url) === normalizedCurrentURL);
-    if (existingPage) {
-        existingPage.count++;
+    const alreadyExistingPage = pages.find((page) => (page === null || page === void 0 ? void 0 : page.url) === normalizedCurrentURL);
+    if (alreadyExistingPage) {
+        alreadyExistingPage.count++;
         return pages;
     }
     else {
@@ -44,12 +44,11 @@ const crawlPage = (baseURL, currentURL, pages) => __awaiter(void 0, void 0, void
             return pages;
         }
         const htmlBody = response.data;
-        // fix this
         const nextURLs = (0, getURLsFromHTML_1.getURLsFromHTML)(htmlBody, baseURL);
-        const nextPages = yield Promise.allSettled(nextURLs.map((nextURL) => __awaiter(void 0, void 0, void 0, function* () {
-            pages = yield crawlPage(baseURL, nextURL, pages);
+        const newPages = yield Promise.allSettled(nextURLs.map((nextURL) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield crawlPage(baseURL, nextURL, pages);
         })));
-        nextPages.forEach((page) => {
+        newPages.forEach((page) => {
             const settledPage = page;
             if (settledPage.status === "fulfilled") {
                 pages.push({ url: settledPage.value.url, count: 1, ogData: null });
@@ -61,6 +60,7 @@ const crawlPage = (baseURL, currentURL, pages) => __awaiter(void 0, void 0, void
     }
     return pages;
 });
+// not working properly yet, crawling the page should output the same urls as the sitemap
 const normalizeURL = (url) => {
     return (0, normalize_url_1.default)(url, { stripWWW: false });
 };
