@@ -44,12 +44,16 @@ const crawlPage = (baseURL, currentURL, pages) => __awaiter(void 0, void 0, void
             return pages;
         }
         const htmlBody = response.data;
+        // fix this
         const nextURLs = (0, getURLsFromHTML_1.getURLsFromHTML)(htmlBody, baseURL);
-        const nextPages = yield Promise.all(nextURLs.map((nextURL) => __awaiter(void 0, void 0, void 0, function* () {
+        const nextPages = yield Promise.allSettled(nextURLs.map((nextURL) => __awaiter(void 0, void 0, void 0, function* () {
             pages = yield crawlPage(baseURL, nextURL, pages);
         })));
         nextPages.forEach((page) => {
-            pages.push(page);
+            const settledPage = page;
+            if (settledPage.status === "fulfilled") {
+                pages.push({ url: settledPage.value.url, count: 1, ogData: null });
+            }
         });
     }
     catch (error) {
@@ -88,7 +92,6 @@ exports.handler = function (event) {
                     };
                 }
                 else if (!sitemap) {
-                    // const pages = await crawlPage(url, url, {});
                     const pages = yield crawlPage(url, url, []);
                     const report = (0, report_1.generateReport)(pages);
                     return {

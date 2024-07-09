@@ -11,10 +11,12 @@ interface Page {
   ogData: any;
 }
 
+const excludeURLs = [];
+
 const crawlPage = async (
   baseURL: string,
   currentURL: string,
-  pages: (Page | void)[]
+  pages: Page[]
 ) => {
   const baseURLObj = new URL(baseURL);
   const currentURLObj = new URL(currentURL, baseURL);
@@ -48,13 +50,17 @@ const crawlPage = async (
     const htmlBody = response.data;
 
     const nextURLs = getURLsFromHTML(htmlBody, baseURL);
-    const nextPages = await Promise.all(
+    const newPages = await Promise.allSettled(
       nextURLs.map(async (nextURL) => {
-        pages = await crawlPage(baseURL, nextURL, pages);
+        return await crawlPage(baseURL, nextURL, pages);
       })
     );
-    nextPages.forEach((page) => {
-      pages.push(page);
+
+    newPages.forEach((page) => {
+      const settledPage = page as PromiseSettledResult<Page>;
+      if (settledPage.status === "fulfilled") {
+        pages.push({ url: settledPage.value.url, count: 1, ogData: null });
+      }
     });
   } catch (error: any) {
     console.error(`Error fetching ${currentURL}: ${error.message}`);
@@ -63,6 +69,7 @@ const crawlPage = async (
   return pages;
 };
 
+// not working properly yet, crawling the page should output the same urls as the sitemap
 const normalizeURL = (url: string) => {
   return normalizeUrl(url, { stripWWW: false });
 };
@@ -96,7 +103,6 @@ exports.handler = async function (event: Request) {
           body: JSON.stringify({ url, report }),
         };
       } else if (!sitemap) {
-        // const pages = await crawlPage(url, url, {});
         const pages = await crawlPage(url, url, []);
         const report = generateReport(pages);
         return {

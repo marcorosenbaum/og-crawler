@@ -73,7 +73,9 @@ const OGReport: React.FC<{
             >
               {item.url}
             </a>
-            <p>Link was found {item.count} times on the page.</p>
+            {item.count > 1 && (
+              <p>Link was found {item.count} times on the page.</p>
+            )}
             <OGLinkPreview ogData={item.ogData} />
           </li>
         ))}
