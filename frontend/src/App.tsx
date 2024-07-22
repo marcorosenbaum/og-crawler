@@ -100,12 +100,30 @@ const App: React.FC = () => {
   return (
     <div className="App flex flex-col gap-4">
       <p className="text-sm my-2">
-        <b>Please note:</b>This is just a demo and therefore only works if the
-        entered url contains a /sitemap.xml. The result is limited to the first
-        5 urls of the sitemap.
+        <b>Please note:</b>This is just a demo and its purpose is to show how
+        the preview of the npm-package{" "}
+        <a
+          className="inline-block font-bold"
+          href="https://www.npmjs.com/package/og-preview"
+          target="_blank"
+          rel="noreferrer"
+        >
+          og-preview
+        </a>{" "}
+        will look like.
       </p>
-      <h1 className="text-3xl font-bold mt-4">og-preview demo</h1>
-      <p>Enter an URL to get Open Graph meta data.</p>
+      <a
+        href="https://www.npmjs.com/package/og-preview"
+        target="_blank"
+        rel="noreferrer"
+        className="text-3xl font-bold mt-4"
+      >
+        og-preview demo
+      </a>
+      <p className="text-sm">
+        Enter an URL to get a preview of how the links will appear when shared
+        on social media platforms.
+      </p>
       <URLInput
         url={url}
         setUrl={setUrl}
