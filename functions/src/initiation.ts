@@ -47,7 +47,7 @@ const initiation = async (url: string) => {
       urls = urls.slice(0, 5);
     }
   } catch (e) {
-    console.error("No sitemap found, generating urls from the website");
+    console.error("No sitemap found");
   }
 
   try {

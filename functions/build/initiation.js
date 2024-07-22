@@ -46,7 +46,7 @@ const initiation = (url) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
     catch (e) {
-        console.error("No sitemap found, generating urls from the website");
+        console.error("No sitemap found");
     }
     try {
         if (urls && urls.length > 0) {
