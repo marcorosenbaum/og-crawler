@@ -13,7 +13,7 @@ const URLInput: React.FC<{
         type="text"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
-        placeholder="Enter URL"
+        placeholder="example: https://netlify.com"
       />
       <button
         disabled={loading}
