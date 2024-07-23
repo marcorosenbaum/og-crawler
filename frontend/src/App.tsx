@@ -83,6 +83,11 @@ const App: React.FC = () => {
     setOgDataFetched(false);
 
     try {
+      if (!/^https?:\/\/[^\s/$.?#].[^\s]*$/.test(url)) {
+        setLoading(false);
+        setError("Please enter a valid URL in the format https://example.com");
+        return;
+      }
       const response = await axios.post("/.netlify/functions/initiation", {
         url,
       });
@@ -98,9 +103,9 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="App flex flex-col gap-4">
+    <div className="App flex flex-col gap-4 max-w-[2000px]">
       <p className="text-sm my-2">
-        <b>Please note:</b>This is just a demo and its purpose is to show how
+        <b>Please note: </b>This is just a demo and its purpose is to show how
         the preview of the npm-package{" "}
         <a
           className="inline-block font-bold"
@@ -112,6 +117,7 @@ const App: React.FC = () => {
         </a>{" "}
         will look like.
       </p>
+
       <a
         href="https://www.npmjs.com/package/og-preview"
         target="_blank"
@@ -121,8 +127,8 @@ const App: React.FC = () => {
         og-preview demo
       </a>
       <p className="text-sm">
-        Enter an URL to get a preview of how the links will appear when shared
-        on social media platforms.
+        Select one of the provided URLs to get a preview of how the links will
+        appear when shared on social media platforms.
       </p>
       <URLInput
         url={url}

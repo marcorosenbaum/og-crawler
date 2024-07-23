@@ -53,6 +53,9 @@ const initiation = async (url: string) => {
   try {
     if (urls && urls.length > 0) {
       await setData();
+    } else if (urls && urls.length === 0) {
+      urls = [url];
+      await setData();
     }
   } catch (e: any) {
     console.error("_ERROR_", e.message);

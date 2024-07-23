@@ -6,11 +6,18 @@ const URLInput: React.FC<{
   setUrl: (newUrl: string) => void;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }> = ({ url, loading, setUrl, handleSubmit }) => {
+  const options = [
+    "https://pinterest.de/",
+    "https://netlify.com",
+    "https://nodejs.org",
+    "https://www.apple.com/",
+  ];
+
   return (
     <form onSubmit={handleSubmit}>
       <input
-        className="border rounded"
         type="text"
+        className="border rounded"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         placeholder="example: https://netlify.com"
@@ -18,7 +25,7 @@ const URLInput: React.FC<{
       <button
         disabled={loading}
         type="submit"
-        className={`border rounded   duration-300 ${
+        className={`border mx-4 rounded duration-300 ${
           loading
             ? "opacity-45 text-black/50 cursor-not-allowed"
             : "hover:bg-white"

@@ -18,7 +18,8 @@ input {
   width: 300px;
 }
 
-button {
+button,
+select {
   padding: 8px;
 }
 

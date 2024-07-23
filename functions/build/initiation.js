@@ -52,6 +52,10 @@ const initiation = (url) => __awaiter(void 0, void 0, void 0, function* () {
         if (urls && urls.length > 0) {
             yield setData();
         }
+        else if (urls && urls.length === 0) {
+            urls = [url];
+            yield setData();
+        }
     }
     catch (e) {
         console.error("_ERROR_", e.message);
