@@ -115,7 +115,8 @@ const App: React.FC = () => {
         >
           og-preview
         </a>{" "}
-        will look like.
+        will look like. The preview is limited to max 5 URLs if the URL contains
+        a sitemap.
       </p>
 
       <a
@@ -127,8 +128,8 @@ const App: React.FC = () => {
         og-preview demo
       </a>
       <p className="text-sm">
-        Select one of the provided URLs to get a preview of how the links will
-        appear when shared on social media platforms.
+        Enter an URL to get a preview of how the links will appear when shared
+        on social media platforms.
       </p>
       <URLInput
         url={url}
